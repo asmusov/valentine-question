@@ -1,193 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Valentine?</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: white;
-      height: 100vh;
-      overflow: hidden;
-      transition: background 0.5s ease;
-    }
-
-    .container {
-      margin-top: 40px;
-      text-align: center;
-      width: 100%;
-      max-width: 700px;
-      padding: 20px;
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    .question-box {
-      border: 2px solid black;
-      padding: 25px;
-      font-size: 28px;
-      font-weight: bold;
-      border-radius: 12px;
-      background: white;
-    }
-
-    .buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      position: relative;
-      height: 70px;
-    }
-
-    button {
-      font-size: 20px;
-      padding: 15px 40px;
-      border-radius: 10px;
-      border: 2px solid black;
-      cursor: pointer;
-      transition: 0.15s;
-      background: white;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    /* NO button becomes movable */
-    #noBtn {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      transition: left 0.2s ease, top 0.2s ease;
-    }
-
-    /* YES image */
-    #yesImage {
-      display: none;
-      margin-top: 20px;
-      max-width: 100%;
-      border-radius: 15px;
-    }
-
-    /* Broken heart */
-    #brokenHeart {
-      display: none;
-      font-size: 120px;
-      margin-top: 120px;
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 600px) {
-      .question-box {
-        font-size: 22px;
-        padding: 20px;
-      }
-
-      button {
-        font-size: 16px;
-        padding: 12px 30px;
-      }
-
-      .buttons {
-        height: 60px;
-        gap: 15px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Question</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+        .hearts {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .heart {
+            position: absolute;
+            background: red;
+            width: 20px;
+            height: 20px;
+            transform: rotate(45deg);
+            animation: fall 5s infinite;
+        }
+        @keyframes fall {
+            0% {
+                top: -20px;
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #ff007f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #e6006e;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="container">
+    <h1>Do you want to be my Valentine?</h1>
+    <button class="button" onclick="showHearts()">YES</button>
+    <div class="hearts"></div>
+    <h2 id="greeting" style="display: none;">GRETE</h2>
 
-    <div id="questionBox" class="question-box">
-      Will you be my valentine?
-    </div>
+    <script>
+        function showHearts() {
+            document.getElementById('greeting').style.display = 'block';
+            createHearts();
+        }
 
-    <div class="buttons" id="buttonRow">
-      <button id="yesBtn" aria-label="Yes, I would like to be your valentine">YES</button>
-      <button id="noBtn" aria-label="No, I would not like to be your valentine">NO</button>
-    </div>
-
-    <!-- YES result image -->
-    <img
-      id="yesImage"
-      src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=1200&q=80"
-      alt="Hearts and Roses celebration"
-    />
-
-    <!-- NO result -->
-    <div id="brokenHeart" role="img" aria-label="Broken heart emoji">💔</div>
-
-  </div>
-
-  <script>
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-
-    const questionBox = document.getElementById("questionBox");
-    const buttonRow = document.getElementById("buttonRow");
-
-    const yesImage = document.getElementById("yesImage");
-    const brokenHeart = document.getElementById("brokenHeart");
-
-    // YES button size multiplier
-    let yesScale = 1;
-
-    // YES CLICK
-    yesBtn.addEventListener("click", () => {
-      questionBox.style.display = "none";
-      buttonRow.style.display = "none";
-      document.body.style.background = "white";
-      yesImage.style.display = "block";
-    });
-
-    // Make YES bigger
-    function growYesButton() {
-      yesScale += 0.25; // grows every time
-      yesBtn.style.transform = `scale(${yesScale})`;
-    }
-
-    // NO BUTTON RUN AWAY FUNCTION
-    function moveNoButton() {
-      const padding = 20;
-
-      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-
-      const randomX = Math.floor(Math.random() * maxX);
-      const randomY = Math.floor(Math.random() * maxY);
-
-      noBtn.style.left = randomX + "px";
-      noBtn.style.top = randomY + "px";
-
-      // Each time NO runs away -> YES gets bigger
-      growYesButton();
-    }
-
-    // Run away on hover (PC)
-    noBtn.addEventListener("mouseenter", moveNoButton);
-
-    // Run away on tap (mobile)
-    noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      moveNoButton();
-    });
-
-    // If somehow NO is clicked anyway
-    noBtn.addEventListener("click", () => {
-      questionBox.style.display = "none";
-      buttonRow.style.display = "none";
-      document.body.style.background = "#777";
-      brokenHeart.style.display = "block";
-    });
-  </script>
+        function createHearts() {
+            const heartsContainer = document.querySelector('.hearts');
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+                heartsContainer.appendChild(heart);
+            }
+        }
+    </script>
 </body>
 </html>
