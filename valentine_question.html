@@ -3,31 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine Question</title>
+    <title>Valentine Page</title>
     <style>
-        body { 
-            background-color: #f4f4f4; 
-            text-align: center; 
-            font-family: 'Arial', sans-serif; 
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: pink;
+            overflow: hidden;
         }
-        .heart { 
-            animation: pulse 1s infinite;
-            font-size: 48px;
-            color: red;
+
+        #hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Prevents heart clicks */
         }
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
+
+        .heart {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            transform: rotate(45deg);
+            animation: fall linear forwards;
+            pointer-events: none; /* Prevents heart clicks */
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translate(-50%, 0) rotate(45deg);
+                opacity: 1;
             }
-            50% {
-                transform: scale(1.2);
+            100% {
+                transform: translate(-50%, 100vh) rotate(45deg);
+                opacity: 0;
             }
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            z-index: 10; /* Keep button above hearts */
         }
     </style>
 </head>
 <body>
-    <h1>❤️ Will you be my Valentine? ❤️</h1>
-    <div class="heart">💖💖💖</div>
-    <p>Answer this question with a heart!</p>
+    <button id="yesButton">YES</button>
+    <div id="hearts"></div>
+    <h1 id="greetText" style="display: none;">GRETE</h1>
+
+    <script>
+        document.getElementById('yesButton').onclick = function() {
+            document.getElementById('greetText').style.display = 'block';
+            createFallingHearts();
+        }
+
+        function createFallingHearts() {
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random duration
+                heart.style.animationDelay = Math.random() * 2 + 's'; // Random delay
+                document.getElementById('hearts').appendChild(heart);
+
+                // Remove heart after animation ends
+                heart.addEventListener('animationend', () => {
+                    heart.remove();
+                });
+            }
+        }
+    </script>
 </body>
 </html>
